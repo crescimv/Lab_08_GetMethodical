@@ -39,23 +39,71 @@ public class SafeInput {
     }
 
     public static int getRangedInt(Scanner pipe, String prompt, int low, int high) {
-        int retInt=0;
-        boolean done;
-
-        System.out.println("\n"+prompt+": ");
-        while (!pipe.hasNextInt()) { //checks for non integer
-            System.out.println("Invalid, please enter a valid integer");
-            pipe.next(); //discard input
+        int retRangedInt=SafeInput.getInt(pipe, prompt);
+        while ((retRangedInt < low) || (retRangedInt > high)) {
+            retRangedInt=SafeInput.getInt(pipe, prompt);
         }
-        while (pipe.hasNextInt()) {
-            if (retInt>=low && retInt<=high) {
-                done=true; //loop ends, returns input
+        return retRangedInt;
+    }
+
+    public static double getRangedDouble(Scanner pipe, String prompt, double low, double high) {
+        double retRangedDouble=SafeInput.getDouble(pipe, prompt);
+        while ((retRangedDouble < low) || (retRangedDouble > high)) {
+            retRangedDouble=SafeInput.getDouble(pipe, prompt);
+        }
+        return retRangedDouble;
+    }
+
+    public static boolean getYNConfirm(Scanner pipe, String prompt) {
+        System.out.println("\n"+prompt+": ");
+        String answer = pipe.next();
+        boolean yesNo=false;
+
+        while (!(answer.equalsIgnoreCase("Y")||answer.equalsIgnoreCase("N"))) {
+            System.out.println("Invalid, please enter [Y,N]");
+            answer=pipe.next();
+        }
+        if (answer.equalsIgnoreCase("Y")) {
+            yesNo=true;
+        }
+        if (answer.equalsIgnoreCase("N")) {
+            yesNo=false;
+        }
+        return yesNo;
+    }
+
+    public static String getRegExString(Scanner pipe, String prompt, String regEx) {
+        String value="";
+        boolean gotAValue = false;
+        while (!gotAValue) {
+            System.out.println(prompt+": ");
+            value=pipe.nextLine();
+            if (value.matches(regEx)) {
+                gotAValue=true;
             } else {
-                System.out.println("Invalid, please enter a valid integer in range");
-                pipe.next(); //discard input
+                System.out.println("\nInvalid input: "+value);
             }
         }
-        return pipe.nextInt();
+        return value;
+    }
+
+    public static void prettyHeader(String msg) {
+        int whiteSpace = (53 - msg.length()) / 2;
+        for (int x=0;x<=59;x++) {
+            System.out.print("*");
+        }
+        System.out.print("\n***");
+        for (int x=0;x<=whiteSpace;x++) {
+            System.out.print(" ");
+        }
+        System.out.print(msg);
+        for (int x=0;x<=whiteSpace;x++) {
+            System.out.print(" ");
+        }
+        System.out.println("***");
+        for (int x=0;x<= 59;x++) {
+            System.out.print("*");
+        }
     }
 }
 
